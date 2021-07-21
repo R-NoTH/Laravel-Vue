@@ -149,7 +149,7 @@ export default {
       this.statusModal = 0;
     },
     modificarArticulo() {
-      this.tituloModal = "Editar Articulo";
+      this.tituloModal = "editar Articulo";
     },
     crearArticulo() {
       this.tituloModal = "Crear Articulo";

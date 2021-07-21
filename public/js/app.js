@@ -2056,7 +2056,7 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
       this.statusModal = 0;
     },
     modificarArticulo: function modificarArticulo() {
-      this.tituloModal = "Editar Articulo";
+      this.tituloModal = "editar Articulo";
     },
     crearArticulo: function crearArticulo() {
       this.tituloModal = "Crear Articulo";
