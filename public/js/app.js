@@ -2001,9 +2001,29 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
 //
 //
 //
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = ({
   data: function data() {
     return {
+      //lo mejor que se hace en Vue, increible!
+      message: "Hello Vue!",
+      contadorCaracteres: 0,
       articulo: {
         name: "",
         description: "",
@@ -2013,8 +2033,9 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
       modificar: true,
       tituloModal: "",
       statusModal: 0,
-      articulos: [] //contiene todos los articulos, que provienen de la consulta por axio que se hace al controlador
-
+      articulos: [],
+      //contiene todos los articulos, que provienen de la consulta por axio que se hace al controlador
+      errores: {}
     };
   },
   methods: {
@@ -2077,37 +2098,51 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
           while (1) {
             switch (_context3.prev = _context3.next) {
               case 0:
+                _context3.prev = 0;
+
                 if (!_this3.modificar) {
-                  _context3.next = 6;
+                  _context3.next = 7;
                   break;
                 }
 
-                _context3.next = 3;
+                _context3.next = 4;
                 return axios.put("articulos/" + _this3.id, _this3.articulo);
 
-              case 3:
+              case 4:
                 res = _context3.sent;
-                _context3.next = 9;
+                _context3.next = 10;
                 break;
 
-              case 6:
-                _context3.next = 8;
+              case 7:
+                _context3.next = 9;
                 return axios.post("articulos", _this3.articulo);
 
-              case 8:
+              case 9:
                 _res = _context3.sent;
 
-              case 9:
+              case 10:
                 _this3.cerrarModal();
 
                 _this3.listar();
 
-              case 11:
+                _context3.next = 17;
+                break;
+
+              case 14:
+                _context3.prev = 14;
+                _context3.t0 = _context3["catch"](0);
+
+                if (_context3.t0.response.data) {
+                  _this3.errores = _context3.t0.response.data.errors;
+                  console.log(_context3.t0.response.data);
+                }
+
+              case 17:
               case "end":
                 return _context3.stop();
             }
           }
-        }, _callee3);
+        }, _callee3, null, [[0, 14]]);
       }))();
     },
     mostrarModal: function mostrarModal() {
@@ -2122,6 +2157,7 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
     },
     cerrarModal: function cerrarModal() {
       this.statusModal = 0;
+      this.errores = {};
     },
     modificarArticulo: function modificarArticulo(data) {
       this.id = data.id;
@@ -2136,6 +2172,9 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
       this.articulo.name = "";
       this.articulo.description = "";
       this.articulo.stock = 0;
+    },
+    ContarCaracter: function ContarCaracter() {
+      this.contadorCaracteres = this.articulo.description.length;
     }
   },
   created: function created() {
@@ -38899,6 +38938,28 @@ var render = function() {
       [_vm._v("\n    Nuevo articulo\n  ")]
     ),
     _vm._v(" "),
+    _c("p", [_vm._v(_vm._s(_vm.message))]),
+    _vm._v(" "),
+    _c("input", {
+      directives: [
+        {
+          name: "model",
+          rawName: "v-model",
+          value: _vm.message,
+          expression: "message"
+        }
+      ],
+      domProps: { value: _vm.message },
+      on: {
+        input: function($event) {
+          if ($event.target.composing) {
+            return
+          }
+          _vm.message = $event.target.value
+        }
+      }
+    }),
+    _vm._v(" "),
     _c("br"),
     _vm._v(" "),
     _c("hr"),
@@ -39044,6 +39105,12 @@ var render = function() {
                     }
                   }),
                   _vm._v(" "),
+                  _vm.errores.name
+                    ? _c("span", { staticClass: "text-danger" }, [
+                        _vm._v(_vm._s(_vm.errores.name))
+                      ])
+                    : _vm._e(),
+                  _vm._v(" "),
                   _c(
                     "small",
                     {
@@ -39076,6 +39143,9 @@ var render = function() {
                     },
                     domProps: { value: _vm.articulo.description },
                     on: {
+                      keyup: function($event) {
+                        return _vm.ContarCaracter()
+                      },
                       input: function($event) {
                         if ($event.target.composing) {
                           return
@@ -39087,7 +39157,19 @@ var render = function() {
                         )
                       }
                     }
-                  })
+                  }),
+                  _vm._v(" "),
+                  _vm.contadorCaracteres > 0
+                    ? _c("span", { staticClass: "text-sm-start" }, [
+                        _vm._v(" " + _vm._s(_vm.contadorCaracteres) + " /50")
+                      ])
+                    : _vm._e(),
+                  _vm._v(" "),
+                  _vm.errores.description
+                    ? _c("span", { staticClass: "text-danger" }, [
+                        _vm._v(_vm._s(_vm.errores.description))
+                      ])
+                    : _vm._e()
                 ]),
                 _vm._v(" "),
                 _c("div", { staticClass: "form-group" }, [
@@ -39117,7 +39199,13 @@ var render = function() {
                         _vm.$set(_vm.articulo, "stock", $event.target.value)
                       }
                     }
-                  })
+                  }),
+                  _vm._v(" "),
+                  _vm.errores.stock
+                    ? _c("span", { staticClass: "text-danger" }, [
+                        _vm._v(_vm._s(_vm.errores.stock))
+                      ])
+                    : _vm._e()
                 ])
               ]),
               _vm._v(" "),

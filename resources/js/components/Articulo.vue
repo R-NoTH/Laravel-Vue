@@ -13,6 +13,10 @@
     >
       Nuevo articulo
     </button>
+
+    <p>{{ message }}</p>
+    <input v-model="message" />
+
     <br />
     <hr />
     <table class="table table-dark table-borderless">
@@ -91,6 +95,9 @@
                 class="form-control"
                 placeholder="Enter a name"
               />
+              <span class="text-danger" v-if="errores.name">{{
+                errores.name
+              }}</span>
               <small id="emailHelp" class="form-text text-muted"
                 >This is a message for a change.</small
               >
@@ -103,7 +110,14 @@
                 id="description"
                 class="form-control"
                 placeholder="Enter a description"
+                @keyup="ContarCaracter()"
               />
+              <span class="text-sm-start" v-if="contadorCaracteres > 0"> {{
+                contadorCaracteres
+              }} /50</span>
+              <span class="text-danger" v-if="errores.description">{{
+                errores.description
+              }}</span>
             </div>
             <div class="form-group">
               <label for="stock">Stock</label>
@@ -114,6 +128,9 @@
                 class="form-control"
                 placeholder="Enter an amount"
               />
+              <span class="text-danger" v-if="errores.stock">{{
+                errores.stock
+              }}</span>
             </div>
           </div>
           <div class="modal-footer">
@@ -139,16 +156,20 @@
 export default {
   data() {
     return {
+      //lo mejor que se hace en Vue, increible!
+      message: "Hello Vue!",
+      contadorCaracteres:0,
       articulo: {
         name: "",
         description: "",
         stock: "",
       },
-      id:0,
+      id: 0,
       modificar: true,
       tituloModal: "",
       statusModal: 0,
       articulos: [], //contiene todos los articulos, que provienen de la consulta por axio que se hace al controlador
+      errores: {},
     };
   },
   methods: {
@@ -161,17 +182,24 @@ export default {
       this.listar();
     },
     async guardar() {
-      if (this.modificar) {
-        //entra si es igual a editar aticulo
-        const res = await axios.put("articulos/" + this.id,this.articulo)
-      } else {
-        //entra si es igual a Nuevo Articulo(al darle al boton nuevo articulo cambia el estado de modificar=false)
+      try {
+        if (this.modificar) {
+          //entra si es igual a editar aticulo
+          const res = await axios.put("articulos/" + this.id, this.articulo);
+        } else {
+          //entra si es igual a Nuevo Articulo(al darle al boton nuevo articulo cambia el estado de modificar=false)
 
-        //enviamos la informacion que contiene el objeto articulo como this.articulo
-        const res = await axios.post("articulos", this.articulo);
+          //enviamos la informacion que contiene el objeto articulo como this.articulo
+          const res = await axios.post("articulos", this.articulo);
+        }
+        this.cerrarModal();
+        this.listar();
+      } catch (error) {
+        if (error.response.data) {
+          this.errores = error.response.data.errors;
+          console.log(error.response.data);
+        }
       }
-      this.cerrarModal();
-      this.listar();
     },
     mostrarModal(data = {}) {
       this.statusModal = 1;
@@ -183,6 +211,7 @@ export default {
     },
     cerrarModal() {
       this.statusModal = 0;
+      this.errores = {};
     },
     modificarArticulo(data) {
       this.id = data.id;
@@ -197,6 +226,9 @@ export default {
       this.articulo.name = "";
       this.articulo.description = "";
       this.articulo.stock = 0;
+    },
+    ContarCaracter(){
+      this.contadorCaracteres = this.articulo.description.length;
     },
   },
   created() {

@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\ArticuloRequest;
 use App\Models\Articulo;
 use Illuminate\Http\Request;
 
@@ -23,7 +24,7 @@ class ArticuloController extends Controller
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(Request $request)
+    public function store(ArticuloRequest $request)
     {
         $articulo = new Articulo();
         $articulo->create($request->all());
@@ -47,7 +48,7 @@ class ArticuloController extends Controller
      * @param  \App\Models\Articulo  $articulo
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, Articulo $articulo)
+    public function update(ArticuloRequest $request, Articulo $articulo)
     {
         $articulo->update($request->all());
     }
