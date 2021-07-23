@@ -1979,18 +1979,42 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
 //
 //
 //
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = ({
   data: function data() {
     return {
       articulo: {
-        name: 'neider orlando',
-        description: 'Desarrollo en Vue js',
-        stock: '10000'
+        name: "",
+        description: "",
+        stock: ""
       },
+      id: 0,
       modificar: true,
       tituloModal: "",
       statusModal: 0,
-      articulos: []
+      articulos: [] //contiene todos los articulos, que provienen de la consulta por axio que se hace al controlador
+
     };
   },
   methods: {
@@ -2043,11 +2067,55 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
         }, _callee2);
       }))();
     },
+    guardar: function guardar() {
+      var _this3 = this;
+
+      return _asyncToGenerator( /*#__PURE__*/_babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default().mark(function _callee3() {
+        var res, _res;
+
+        return _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default().wrap(function _callee3$(_context3) {
+          while (1) {
+            switch (_context3.prev = _context3.next) {
+              case 0:
+                if (!_this3.modificar) {
+                  _context3.next = 6;
+                  break;
+                }
+
+                _context3.next = 3;
+                return axios.put("articulos/" + _this3.id, _this3.articulo);
+
+              case 3:
+                res = _context3.sent;
+                _context3.next = 9;
+                break;
+
+              case 6:
+                _context3.next = 8;
+                return axios.post("articulos", _this3.articulo);
+
+              case 8:
+                _res = _context3.sent;
+
+              case 9:
+                _this3.cerrarModal();
+
+                _this3.listar();
+
+              case 11:
+              case "end":
+                return _context3.stop();
+            }
+          }
+        }, _callee3);
+      }))();
+    },
     mostrarModal: function mostrarModal() {
+      var data = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : {};
       this.statusModal = 1;
 
       if (this.modificar) {
-        this.modificarArticulo();
+        this.modificarArticulo(data);
       } else {
         this.crearArticulo();
       }
@@ -2055,11 +2123,19 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
     cerrarModal: function cerrarModal() {
       this.statusModal = 0;
     },
-    modificarArticulo: function modificarArticulo() {
-      this.tituloModal = "editar Articulo";
+    modificarArticulo: function modificarArticulo(data) {
+      this.id = data.id;
+      this.tituloModal = "Editar Articulo";
+      this.articulo.name = data.name;
+      this.articulo.description = data.description;
+      this.articulo.stock = data.stock;
     },
     crearArticulo: function crearArticulo() {
+      this.id = 0;
       this.tituloModal = "Crear Articulo";
+      this.articulo.name = "";
+      this.articulo.description = "";
+      this.articulo.stock = 0;
     }
   },
   created: function created() {
@@ -38850,7 +38926,7 @@ var render = function() {
                   on: {
                     click: function($event) {
                       _vm.modificar = true
-                      _vm.mostrarModal()
+                      _vm.mostrarModal(articulo)
                     }
                   }
                 },
@@ -39062,8 +39138,16 @@ var render = function() {
                 _vm._v(" "),
                 _c(
                   "button",
-                  { staticClass: "btn btn-primary", attrs: { type: "button" } },
-                  [_vm._v("Save changes")]
+                  {
+                    staticClass: "btn btn-primary",
+                    attrs: { type: "button" },
+                    on: {
+                      click: function($event) {
+                        return _vm.guardar()
+                      }
+                    }
+                  },
+                  [_vm._v("\n            Save changes\n          ")]
                 )
               ])
             ])

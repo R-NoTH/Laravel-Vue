@@ -1,7 +1,7 @@
 <template>
   <div>
     <h1 class="text-center">Hola Mundo</h1>
-    <hr>
+    <hr />
     <!-- Button trigger modal -->
     <button
       @click="
@@ -13,8 +13,8 @@
     >
       Nuevo articulo
     </button>
-    <br>
-    <hr>
+    <br />
+    <hr />
     <table class="table table-dark table-borderless">
       <thead>
         <tr>
@@ -35,7 +35,7 @@
             <button
               @click="
                 modificar = true;
-                mostrarModal();
+                mostrarModal(articulo);
               "
               class="btn btn-outline-info btn-sm"
             >
@@ -83,17 +83,37 @@
           </div>
           <div class="modal-body">
             <div class="form-group">
-                <label for="name">Name Article </label>
-                <input v-model="articulo.name" type="text" id="name" class="form-control" placeholder="Enter a name">
-                <small id="emailHelp" class="form-text text-muted">This is a message for a change.</small>
+              <label for="name">Name Article </label>
+              <input
+                v-model="articulo.name"
+                type="text"
+                id="name"
+                class="form-control"
+                placeholder="Enter a name"
+              />
+              <small id="emailHelp" class="form-text text-muted"
+                >This is a message for a change.</small
+              >
             </div>
             <div class="form-group">
-                <label for="description">Description</label>
-                <input v-model="articulo.description" type="text" id="description" class="form-control" placeholder="Enter a description">
+              <label for="description">Description</label>
+              <input
+                v-model="articulo.description"
+                type="text"
+                id="description"
+                class="form-control"
+                placeholder="Enter a description"
+              />
             </div>
             <div class="form-group">
-                <label for="stock">Stock</label>
-                <input v-model="articulo.stock" type="number" id="stock" class="form-control" placeholder="Enter an amount">
+              <label for="stock">Stock</label>
+              <input
+                v-model="articulo.stock"
+                type="number"
+                id="stock"
+                class="form-control"
+                placeholder="Enter an amount"
+              />
             </div>
           </div>
           <div class="modal-footer">
@@ -105,7 +125,9 @@
             >
               Close
             </button>
-            <button type="button" class="btn btn-primary">Save changes</button>
+            <button @click="guardar()" type="button" class="btn btn-primary">
+              Save changes
+            </button>
           </div>
         </div>
       </div>
@@ -117,15 +139,16 @@
 export default {
   data() {
     return {
-        articulo:{
-            name:'neider orlando',
-            description:'Desarrollo en Vue js',
-            stock:'10000',
-        },  
+      articulo: {
+        name: "",
+        description: "",
+        stock: "",
+      },
+      id:0,
       modificar: true,
       tituloModal: "",
       statusModal: 0,
-      articulos: [],
+      articulos: [], //contiene todos los articulos, que provienen de la consulta por axio que se hace al controlador
     };
   },
   methods: {
@@ -137,10 +160,23 @@ export default {
       const res = await axios.delete("articulos/" + id);
       this.listar();
     },
-    mostrarModal() {
+    async guardar() {
+      if (this.modificar) {
+        //entra si es igual a editar aticulo
+        const res = await axios.put("articulos/" + this.id,this.articulo)
+      } else {
+        //entra si es igual a Nuevo Articulo(al darle al boton nuevo articulo cambia el estado de modificar=false)
+
+        //enviamos la informacion que contiene el objeto articulo como this.articulo
+        const res = await axios.post("articulos", this.articulo);
+      }
+      this.cerrarModal();
+      this.listar();
+    },
+    mostrarModal(data = {}) {
       this.statusModal = 1;
       if (this.modificar) {
-        this.modificarArticulo();
+        this.modificarArticulo(data);
       } else {
         this.crearArticulo();
       }
@@ -148,11 +184,19 @@ export default {
     cerrarModal() {
       this.statusModal = 0;
     },
-    modificarArticulo() {
-      this.tituloModal = "editar Articulo";
+    modificarArticulo(data) {
+      this.id = data.id;
+      this.tituloModal = "Editar Articulo";
+      this.articulo.name = data.name;
+      this.articulo.description = data.description;
+      this.articulo.stock = data.stock;
     },
     crearArticulo() {
+      this.id = 0;
       this.tituloModal = "Crear Articulo";
+      this.articulo.name = "";
+      this.articulo.description = "";
+      this.articulo.stock = 0;
     },
   },
   created() {
