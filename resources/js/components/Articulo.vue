@@ -102,6 +102,36 @@
                 >This is a message for a change.</small
               >
             </div>
+             <div class="form-group">
+              <label for="option">option</label>
+              <input
+                v-model="articulo.option"
+                type="radio"
+                value="1"
+                id="name"
+                class="form-control"
+              />
+              <input
+                v-model="articulo.option"
+                type="radio"
+                value="2"
+
+                id="name"
+                class="form-control"
+              />
+              <input
+                v-model="articulo.option"
+                type="radio"
+                value="3"
+
+                id="name"
+                class="form-control"
+              />
+              <span class="text-danger" >{{
+                articulo.option
+              }}</span>
+
+            </div>
             <div class="form-group">
               <label for="description">Description</label>
               <input
@@ -163,6 +193,7 @@ export default {
         name: "",
         description: "",
         stock: "",
+        option:"hh",
       },
       id: 0,
       modificar: true,
@@ -186,11 +217,13 @@ export default {
         if (this.modificar) {
           //entra si es igual a editar aticulo
           const res = await axios.put("articulos/" + this.id, this.articulo);
+
         } else {
           //entra si es igual a Nuevo Articulo(al darle al boton nuevo articulo cambia el estado de modificar=false)
 
           //enviamos la informacion que contiene el objeto articulo como this.articulo
           const res = await axios.post("articulos", this.articulo);
+          console.log(res.data);
         }
         this.cerrarModal();
         this.listar();

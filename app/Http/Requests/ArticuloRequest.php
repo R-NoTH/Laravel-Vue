@@ -24,17 +24,21 @@ class ArticuloRequest extends FormRequest
     public function rules()
     {
         return [
-            'name'=>'required', 
+            'name'=>'required',
             'description'=>'required',
             'stock'=>'required',
+            // 'option'=>'required',
+
         ];
     }
     public function messages()
     {
         return [
-            'name.*'=>'El nombre es Obligatorio', 
+            'name.*'=>'El nombre es Obligatorio',
             'description.*'=>'La descripcion es Obligatoria',
-            'stock.*'=>'El stock no puede quedas en Blanco ', 
+            'stock.*'=>'El stock no puede quedas en Blanco ',
+            // 'option.*'=>'la option es obligatorioa ',
+
         ];
     }
 }

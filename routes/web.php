@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\ArticuloController;
+use App\Http\Controllers\BookController;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -21,4 +22,12 @@ Route::get('/', function () {
 Auth::routes();
 
 Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name('home');
+
+// articulos
 Route::apiResource('/articulos', ArticuloController::class);
+
+// books
+Route::get('/books', [BookController::class,'index']);
+Route::get('/books/listar', [BookController::class,'listarBooks']);
+
+

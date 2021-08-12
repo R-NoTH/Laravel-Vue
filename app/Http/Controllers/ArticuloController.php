@@ -28,6 +28,13 @@ class ArticuloController extends Controller
     {
         $articulo = new Articulo();
         $articulo->create($request->all());
+        $data = json_decode($request->getContent());
+        $name = $data->name;
+        $description = $data->description;
+        $stock = $data->stock;
+        $option = $data->option;
+
+        return response()->json($option);
     }
 
     /**
